@@ -7,6 +7,11 @@ let server = restify.createServer();
 server.use(restify.plugins.queryParser())
 server.use(restify.plugins.bodyParser())
 
+// temporary, just to keep a quick key value store in memory
+server.db = {
+  'test': { message: 'hello patrick' }
+}
+
 let api = new HashtagccApi(server)
 
 server.pre((req, res, next) => {
@@ -16,6 +21,10 @@ server.pre((req, res, next) => {
 
     return next()
 })
+
+server.get('/db', (req, res, next) => {
+  res.send(200, server.db);
+});
 
 server.post('/api/:action', api.post)
 server.get('/api/:action', api.get)
